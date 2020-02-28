@@ -1,9 +1,11 @@
-import requests
+import urllib3
 import urllib
+import json
 
 
 class Jokes:
     def __init__(self):
+        self.http = urllib3.PoolManager()
         print("Sv443's JokeAPI")
 
     def build_request(
@@ -57,9 +59,10 @@ class Jokes:
             else:
                 search_string = urllib.parse.quote(search_string)
         if id_range:
-            range_limit = requests.get("https://sv443.net/jokeapi/v2/info").json()[
-                "jokes"
-            ]["totalCount"]
+
+            r = self.http.request('GET', "https://sv443.net/jokeapi/v2/info")
+            range_limit = json.loads(r.data)["jokes"]["totalCount"]
+
             if len(id_range) > 2:
                 raise Exception("id_range must be no longer than 2 items.")
             elif id_range[0] < 0:
@@ -101,13 +104,14 @@ class Jokes:
         return r
 
     def send_request(self, request, response_format):
-        r = requests.get(request)
+        r = self.http.request('GET', request)
+
         if response_format == "json":
-            return r.json()
+            return json.loads(r.data)
         elif response_format == "xml":
-            return r.content
+            return r.data
         else:
-            return r.content
+            return r.data
 
     def get_joke(
         self,
