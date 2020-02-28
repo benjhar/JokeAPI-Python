@@ -3,7 +3,7 @@
 Just frickin
 
 ```python
-  from main import Jokes
+  from jokeapi import Jokes
 
   j = Jokes()
   joke = j.get_joke()
