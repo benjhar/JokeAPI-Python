@@ -9,7 +9,7 @@ setup(
   author_email = 'leet_haker@cyber-wizard.com',
   url = 'https://github.com/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper',
   download_url = 'https://github.com/user/reponame/archive/v_01.tar.gz',
-  keywords = ['SOME', 'MEANINGFULL', 'KEYWORDS'],
+  keywords = ['api wrapper', 'wrapper', 'api', 'jokes'],
   install_requires=[],
   classifiers=[
     'Development Status :: 3 - Alpha',
