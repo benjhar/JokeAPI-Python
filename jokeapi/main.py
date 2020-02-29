@@ -60,8 +60,8 @@ class Jokes:
                 search_string = urllib.parse.quote(search_string)
         if id_range:
 
-            r = self.http.request('GET', "https://sv443.net/jokeapi/v2/info")
-            dict = json.loads(r.data)
+            response = self.http.request('GET', "https://sv443.net/jokeapi/v2/info")
+            dict = json.loads(response.data)
             range_limit = dict["jokes"]["totalCount"]
 
             if len(id_range) > 2:
