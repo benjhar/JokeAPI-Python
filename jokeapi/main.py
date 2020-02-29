@@ -23,7 +23,11 @@ class Jokes:
             for c in category:
                 if not c.lower() in ["programming", "miscellaneous", "dark"]:
                     raise Exception(
-                        'Invalid category selected. Available categories are "programming", "miscellaneous", and "dark". Leave blank for any.'
+                        '''Invalid category selected. Available categories are:
+                            "programming"
+                            "miscellaneous"
+                            "dark".
+                        Leave blank for any.'''
                     )
                     return
             cats = ",".join(category)
@@ -32,9 +36,23 @@ class Jokes:
 
         if len(blacklist) > 0:
             for b in blacklist:
-                if not b in ["nsfw", "religious", "political", "racist", "sexist"]:
+                if b not in [
+                            "nsfw",
+                            "religious",
+                            "political",
+                            "racist",
+                            "sexist"
+                            ]:
                     raise Exception(
-                        'You have blacklisted flags which are not available. Available flags are:\n"racist"\n"religious"\n"political"\n"sexist"\n"nsfw"'
+                        '''\n\n
+                        You have blacklisted flags which are not available.
+                        Available flags are:
+                            "racist"
+                            "religious"
+                            "political"
+                            "sexist"
+                            "nsfw"
+                        '''
                     )
                     return
             blacklistFlags = ",".join(blacklist)
@@ -42,11 +60,14 @@ class Jokes:
             blacklistFlags = None
 
         if response_format not in ["json", "xml", "yaml"]:
-            raise Exception("Response format must be either json, xml or yaml.")
+            raise Exception(
+                "Response format must be either json, xml or yaml."
+            )
         if type:
             if type not in ["single", "twopart"]:
                 raise Exception(
-                    'Invalid joke type. Available options are "single" or "twopart".'
+                    '''Invalid joke type.
+                    Available options are "single" or "twopart".'''
                 )
                 return
         else:
@@ -60,17 +81,22 @@ class Jokes:
                 search_string = urllib.parse.quote(search_string)
         if id_range:
 
-            response = self.http.request('GET', "https://sv443.net/jokeapi/v2/info")
+            response = self.http.request(
+                                        'GET',
+                                        "https://sv443.net/jokeapi/v2/info"
+                                        )
             dict = json.loads(response.data)
             range_limit = dict["jokes"]["totalCount"]
 
             if len(id_range) > 2:
                 raise Exception("id_range must be no longer than 2 items.")
             elif id_range[0] < 0:
-                raise Exception("id_range[0] must be greater than or equal to 0.")
+                raise Exception(
+                             "id_range[0] must be greater than or equal to 0."
+                               )
             elif id_range[1] > range_limit:
                 raise Exception(
-                    f"id_range[1] must be less than or equal to {range_limit-1}."
+                 f"id_range[1] must be less than or equal to {range_limit-1}."
                 )
 
         r += cats
