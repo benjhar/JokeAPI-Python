@@ -61,7 +61,8 @@ class Jokes:
         if id_range:
 
             r = self.http.request('GET', "https://sv443.net/jokeapi/v2/info")
-            range_limit = json.loads(r.data)["jokes"]["totalCount"]
+            dict = json.loads(r.data)
+            range_limit = dict["jokes"]["totalCount"]
 
             if len(id_range) > 2:
                 raise Exception("id_range must be no longer than 2 items.")
