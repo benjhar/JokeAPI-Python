@@ -1,15 +1,14 @@
 from distutils.core import setup
 setup(
   name='jokeapi',
-  packages=['jokeapi'],   # Chose the same as "name"
-  version='0.1.1',
+  packages=['jokeapi'],
+  version='0.1.2',
   license='GNU General Public License v3 (GPLv3)',
   description='An API Wrapper for Sv443\'s JokeAPI',
   author='thenamesweretakenalready',
   author_email='leet_haker@cyber-wizard.com',
-  url="""https://github.com/
-  thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper""",
-  download_url='https://github.com/user/Sv443s-JokeAPI-Python-Wrapper/archive/v0.1.1.tar.gz',
+  url="""https://github.com/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper""",
+  download_url='https://github.com/user/Sv443s-JokeAPI-Python-Wrapper/archive/v0.1.2.tar.gz',
   keywords=['api wrapper', 'wrapper', 'api', 'jokes'],
   install_requires=[],
   classifiers=[
