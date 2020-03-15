@@ -1,9 +1,12 @@
 # Python CircleCI 2.0 configuration file
 version: 2
-jobs:
-   - test-3.8
-   - test-3.6
-   - test-2.7
+workflows:
+    version: 2
+    test:
+        jobs:
+        - test-3.8
+        - test-3.6
+        - test-2.7
 
 jobs:
   test-3.8: &tests
