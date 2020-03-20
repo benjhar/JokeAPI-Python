@@ -80,7 +80,8 @@ The format in which the API should respond.
 Options are:
 `json`,
 `yaml`,
-`xml`
+`xml`,
+`txt`
 
 If left blank it will default to `json`.
 
@@ -173,7 +174,7 @@ A succesful API call will return:
 
 A succesful API call will return:
 
-```python
+```xml
 <?xml version='1.0'?>
 <data>
     <category>Dark</category>
@@ -196,7 +197,7 @@ A succesful API call will return:
 
 A succesful API call will return:
 
-```python
+```yaml
 category: "Programming"
 type: "single"
 joke: "Your momma is so fat, you need to switch to NTFS to store a picture of her."
@@ -208,6 +209,17 @@ flags:
   sexist: false
 id: 56
 error: false
+```
+
+
+### txt
+
+A succesful API call will return:
+
+```
+Why does no one like SQLrillex?
+
+He keeps dropping the database.
 ```
 
 ---

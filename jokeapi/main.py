@@ -22,7 +22,7 @@ class Jokes:
         if len(category) > 0:
             for c in category:
                 if not c.lower() in ["programming", "miscellaneous", "dark"]:
-                    raise Exception(
+                    raise ValueError(
                         '''Invalid category selected. Available categories are:
                             "programming"
                             "miscellaneous"
@@ -43,7 +43,7 @@ class Jokes:
                             "racist",
                             "sexist"
                             ]:
-                    raise Exception(
+                    raise ValueError(
                         '''\n\n
                         You have blacklisted flags which are not available.
                         Available flags are:
@@ -59,13 +59,13 @@ class Jokes:
         else:
             blacklistFlags = None
 
-        if response_format not in ["json", "xml", "yaml"]:
+        if response_format not in ["json", "xml", "yaml", "txt"]:
             raise Exception(
                 "Response format must be either json, xml or yaml."
             )
         if type:
             if type not in ["single", "twopart"]:
-                raise Exception(
+                raise ValueError(
                     '''Invalid joke type.
                     Available options are "single" or "twopart".'''
                 )
@@ -75,7 +75,7 @@ class Jokes:
 
         if search_string:
             if not isinstance(search_string, str):
-                raise Exception("search_string must be a string.")
+                raise ValueError("search_string must be a string.")
                 return
             else:
                 search_string = urllib.parse.quote(search_string)
@@ -89,13 +89,13 @@ class Jokes:
             range_limit = dict["jokes"]["totalCount"]
 
             if len(id_range) > 2:
-                raise Exception("id_range must be no longer than 2 items.")
+                raise ValueError("id_range must be no longer than 2 items.")
             elif id_range[0] < 0:
-                raise Exception(
+                raise ValueError(
                              "id_range[0] must be greater than or equal to 0."
                                )
             elif id_range[1] > range_limit:
-                raise Exception(
+                raise ValueError(
                  f"id_range[1] must be less than or equal to {range_limit-1}."
                 )
 
