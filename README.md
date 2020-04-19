@@ -236,6 +236,7 @@ If not, feel free to ask me through one of the channels provided below.
 ---
 
 Developer contact:
+
 [Discord](https://discord.gg/mB989eP)
 
 [Issue Tracker](https://github.com/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper/issues)
