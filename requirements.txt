@@ -15,4 +15,4 @@ pytest-cov==2.8.1
 six==1.14.0
 wcwidth==0.1.8
 urllib3==1.25.8
-dotenv
+python-dotenv
