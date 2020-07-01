@@ -131,26 +131,24 @@ class Jokes:
         return r
 
     def send_request(self, request, response_format, return_headers, auth_token, user_agent):
+        returns = []
+
         if auth_token:
             r = self.http.request('GET', request, headers={'Authorization': str(
                 auth_token), 'user-agent': str(user_agent)})
         else:
             r = self.http.request('GET', request, headers={'user-agent': str(user_agent)})
 
+        headers = r.headers
+        returns.append(r.data)
+
         if return_headers:
-            if response_format == "json":
-                return r.data, r.headers
-            elif response_format == "xml":
-                return r.data, r.headers
-            else:
-                return r.data, r.headers
-        else:
-            if response_format == "json":
-                return r.data
-            elif response_format == "xml":
-                return r.data
-            else:
-                return r.data
+            returns.append(headers)
+
+        if not headers["Token-Valid"]:
+            returns.append({"Token-Valid": False})
+
+        return returns
 
     def get_joke(
         self,
