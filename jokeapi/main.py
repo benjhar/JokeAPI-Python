@@ -37,12 +37,12 @@ class Jokes:
         if len(blacklist) > 0:
             for b in blacklist:
                 if b not in [
-                            "nsfw",
-                            "religious",
-                            "political",
-                            "racist",
-                            "sexist"
-                            ]:
+                    "nsfw",
+                    "religious",
+                    "political",
+                    "racist",
+                    "sexist"
+                ]:
                     raise ValueError(
                         '''\n\n
                         You have blacklisted flags which are not available.
@@ -82,9 +82,9 @@ class Jokes:
         if id_range:
 
             response = self.http.request(
-                                        'GET',
-                                        "https://sv443.net/jokeapi/v2/info"
-                                        )
+                'GET',
+                "https://sv443.net/jokeapi/v2/info"
+            )
             dict = json.loads(response.data)
             range_limit = dict["jokes"]["totalCount"]
 
@@ -92,11 +92,11 @@ class Jokes:
                 raise ValueError("id_range must be no longer than 2 items.")
             elif id_range[0] < 0:
                 raise ValueError(
-                             "id_range[0] must be greater than or equal to 0."
-                               )
+                    "id_range[0] must be greater than or equal to 0."
+                )
             elif id_range[1] > range_limit:
                 raise ValueError(
-                 f"id_range[1] must be less than or equal to {range_limit-1}."
+                    f"id_range[1] must be less than or equal to {range_limit-1}."
                 )
 
         r += cats
@@ -130,15 +130,27 @@ class Jokes:
 
         return r
 
-    def send_request(self, request, response_format):
-        r = self.http.request('GET', request)
-
-        if response_format == "json":
-            return json.loads(r.data)
-        elif response_format == "xml":
-            return r.data
+    def send_request(self, request, response_format, return_headers, auth_token, user_agent):
+        if auth_token:
+            r = self.http.request('GET', request, headers={'Authorization': str(
+                auth_token), 'user-agent': str(user_agent)})
         else:
-            return r.data
+            r = self.http.request('GET', request, headers={'user-agent': str(user_agent)})
+
+        if return_headers:
+            if response_format == "json":
+                return r.data, r.headers
+            elif response_format == "xml":
+                return r.data, r.headers
+            else:
+                return r.data, r.headers
+        else:
+            if response_format == "json":
+                return r.data
+            elif response_format == "xml":
+                return r.data
+            else:
+                return r.data
 
     def get_joke(
         self,
@@ -148,9 +160,13 @@ class Jokes:
         type=None,
         search_string=None,
         id_range=None,
+        auth_token=None,
+        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0",
+        return_headers=False
     ):
         r = self.build_request(
             category, blacklist, response_format, type, search_string, id_range
         )
-        response = self.send_request(r, response_format)
+
+        response = self.send_request(r, response_format, return_headers, auth_token, user_agent)
         return response
