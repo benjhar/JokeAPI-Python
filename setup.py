@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="jokeapi",
     packages=["jokeapi"],
-    version="0.2.1",
+    version="0.2.3",
     license="GNU General Public License v3 (GPLv3)",
     description="An API Wrapper for Sv443's JokeAPI",
     long_description=long_description,
@@ -14,7 +14,7 @@ setuptools.setup(
     author="thenamesweretakenalready",
     author_email="leet_haker@cyber-wizard.com",
     url="""https://github.com/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper""",
-    download_url="https://github.com/user/Sv443s-JokeAPI-Python-Wrapper/archive/v0.1.5.tar.gz",
+    download_url="https://github.com/user/Sv443s-JokeAPI-Python-Wrapper/archive/v0.2.3.tar.gz",
     keywords=["api wrapper", "wrapper", "api", "jokes", "python", "joke api"],
     install_requires=setuptools.find_packages(),
     classifiers=[

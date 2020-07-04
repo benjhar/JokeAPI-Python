@@ -1,6 +1,7 @@
 import urllib3
 import urllib
-import json
+import simplejson as json
+import re
 
 
 class Jokes:
@@ -131,26 +132,39 @@ class Jokes:
         return r
 
     def send_request(self, request, response_format, return_headers, auth_token, user_agent):
+        returns = []
+
         if auth_token:
             r = self.http.request('GET', request, headers={'Authorization': str(
                 auth_token), 'user-agent': str(user_agent)})
         else:
             r = self.http.request('GET', request, headers={'user-agent': str(user_agent)})
 
-        if return_headers:
-            if response_format == "json":
-                return r.data, r.headers
-            elif response_format == "xml":
-                return r.data, r.headers
-            else:
-                return r.data, r.headers
+        data = r.data
+
+        if response_format == "json":
+            try:
+                data = json.loads(data)
+            except:
+                print(data)
+                raise
         else:
-            if response_format == "json":
-                return r.data
-            elif response_format == "xml":
-                return r.data
-            else:
-                return r.data
+            data = str(data)[2:-1].replace(r'\n', '\n').replace('\\', '')
+            if len(' '.join(re.split("error", data.lower().replace("\n", "NEWLINECHAR"))[0:][1:]).replace(
+                    '<', '').replace('/', '').replace(' ', '').replace(':', '').replace('>', '').replace('NEWLINECHAR', '\n')) == 4:
+                return [Exception(f"API returned an error. Full response: \n\n {data}")]
+
+        headers = str(r.headers).replace(r'\n', '').replace(
+            '\n', '').replace(r'\\', '').replace(r"\'", '')[15:-1]
+
+        returns.append(data)
+        if return_headers:
+            returns.append(headers)
+
+        if auth_token:
+            returns.append({"Token-Valid": bool(int(re.split(r"Token-Valid", headers)[1][4]))})
+
+        return returns
 
     def get_joke(
         self,

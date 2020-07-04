@@ -10,14 +10,16 @@ while also maintaining a readable codebase.
 
 You can install jokeapi through [pip](https://pypi.org/project/pip/) by using `pip install jokeapi`
 
-So far there are no build from source instructions.
-
 ---
 
 # get_joke
 
 The wrapper is structured in such a way that the end-user should only ever have to
-interact with one function. This function is `get_joke()`
+interact with one function. This function is `get_joke()`.
+
+Please note that urllib3, the core dependency of this wrapper automatically abides by
+`Retry-After` headers, which means you may have to wait a long time for a joke if you
+have made a lot of requests recently
 
 ---
 
@@ -29,7 +31,8 @@ interact with one function. This function is `get_joke()`
   from jokeapi import Jokes # Import the Jokes class
 
   j = Jokes()  # Initialise the class
-  j.get_joke()  # Retrieve a random joke
+  joke = j.get_joke(type="single", response_format="txt")  # Retrieve a random joke
+  print(joke)
 ```
 
 ### Parameters
@@ -129,7 +132,7 @@ If left blank it will default to `None`
 
 The range in which the selected joke should fall. ID's are decided by the order in which jokes are submitted.
 The argument passes should be in form of list or tuple, and should not exceed length of 2 items. First item
-should be minimum 0.
+should be minimum 0. Maximum value can be determined [here](https://sv443.net/jokeapi/v2/info)
 
 If left blank it will default to the maximum range.
 
@@ -137,7 +140,58 @@ If left blank it will default to the maximum range.
 #### Example
 
 ```python
-  joke = get_joke(id_range=[10,100])  # Will return a joke with the ID between 10 and 100
+  joke = get_joke(id_range=[10,100])  # Will return a joke with the ID between 10 and 100.
+```
+
+---
+
+### auth_token
+
+A string token provided by the api owner. Using it will mean you are whitelisted by the api and can make
+more requests than normal users. Defaults to None
+
+
+#### Example
+
+```python
+  joke = get_joke(auth_token="aaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbb") # Will send the token to the api in a header.
+```
+
+---
+
+### user_agent
+
+A string sent the the api that tells the api what browser you are (pretending to be). The default user agent
+is Mozilla Firefox from Windows 10 and should work fine, but the functionality is provided in case you wish
+to change it
+
+
+#### Example
+
+```python
+  joke = get_joke(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0")
+  # This is in fact the default user agent, and tells the API that we are visitng the page from a Firefox 77.0
+  # browser using Windows 10 64bit.
+```
+
+---
+
+### return_headers
+
+A boolean value (True or False) that tells the wrapper if you wish to receive headers in the return from the function.
+Defaults to False.
+
+
+#### Example
+
+```python
+  response = get_joke(return_headers=True)
+  joke = response[0]
+  headers = response[1]
+  # The function returns the joke and then the headers using the "return x, y" syntax, so you can index it like a list or tuple.
+
+  print(f"Joke: {joke}")
+  print(f"Headers: {headers}")
 ```
 
 ---
@@ -151,7 +205,7 @@ Depending on what format is chosen different things will be returned.
 
 A succesful API call will return:
 
-```python
+```json
   {
       "category": "Miscellaneous",
       "type": "twopart",
@@ -228,8 +282,6 @@ He keeps dropping the database.
 
 The wrapper can raise multiple different errors depending on what you did wrong.
 
-### ValueErrors will always be raised with expected errors.
-
 The errors are descriptive enough that you should be able to solve them with the information provided in the error message.
 If not, feel free to ask me through one of the channels provided below.
 
@@ -237,7 +289,7 @@ If not, feel free to ask me through one of the channels provided below.
 
 Developer contact:
 
-[Discord](https://discord.gg/mB989eP)
+![Discord](https://discord.com/assets/07dca80a102d4149e9736d4b162cff6f.ico)[**Discord**](https://discord.gg/mB989eP)
 
 [Issue Tracker](https://github.com/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper/issues)
 
