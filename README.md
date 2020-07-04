@@ -15,7 +15,11 @@ You can install jokeapi through [pip](https://pypi.org/project/pip/) by using `p
 # get_joke
 
 The wrapper is structured in such a way that the end-user should only ever have to
-interact with one function. This function is `get_joke()`
+interact with one function. This function is `get_joke()`.
+
+Please note that urllib3, the core dependency of this wrapper automatically abides by
+`Retry-After` headers, which means you may have to wait a long time for a joke if you
+have made a lot of requests recently
 
 ---
 
@@ -201,7 +205,7 @@ Depending on what format is chosen different things will be returned.
 
 A succesful API call will return:
 
-```python
+```json
   {
       "category": "Miscellaneous",
       "type": "twopart",
@@ -277,8 +281,6 @@ He keeps dropping the database.
 ## Errors
 
 The wrapper can raise multiple different errors depending on what you did wrong.
-
-### ValueErrors will always be raised with expected errors.
 
 The errors are descriptive enough that you should be able to solve them with the information provided in the error message.
 If not, feel free to ask me through one of the channels provided below.

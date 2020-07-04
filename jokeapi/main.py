@@ -1,6 +1,7 @@
 import urllib3
 import urllib
-import json
+import simplejson as json
+import re
 
 
 class Jokes:
@@ -139,14 +140,29 @@ class Jokes:
         else:
             r = self.http.request('GET', request, headers={'user-agent': str(user_agent)})
 
-        headers = r.headers
-        returns.append(r.data)
+        data = r.data
 
+        if response_format == "json":
+            try:
+                data = json.loads(data)
+            except:
+                print(data)
+                raise
+        else:
+            data = str(data)[2:-1].replace(r'\n', '\n').replace('\\', '')
+            if len(' '.join(re.split("error", data.lower().replace("\n", "NEWLINECHAR"))[0:][1:]).replace(
+                    '<', '').replace('/', '').replace(' ', '').replace(':', '').replace('>', '').replace('NEWLINECHAR', '\n')) == 4:
+                return [Exception(f"API returned an error. Full response: \n\n {data}")]
+
+        headers = str(r.headers).replace(r'\n', '').replace(
+            '\n', '').replace(r'\\', '').replace(r"\'", '')[15:-1]
+
+        returns.append(data)
         if return_headers:
             returns.append(headers)
 
-        if not headers["Token-Valid"]:
-            returns.append({"Token-Valid": False})
+        if auth_token:
+            returns.append({"Token-Valid": bool(int(re.split(r"Token-Valid", headers)[1][4]))})
 
         return returns
 
