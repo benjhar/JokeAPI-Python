@@ -52,7 +52,7 @@ If left blank it will default to use `Any`.
 ##### Example
 
 ```python
-  joke = get_joke(categories=['programming', 'dark'])  # Will return a joke that fits in either the programming or dark category.
+  joke = j.get_joke(category=['programming', 'dark'])  # Will return a joke that fits in either the programming or dark category.
 ```
 
 ---
@@ -72,7 +72,7 @@ If left blank it will default to `None`.
 ##### Example
 
 ```python
-  joke = get_joke(blacklist=['nsfw', 'racist'])  # Will return a joke that does not have either the flag "nsfw" or "racist".
+  joke = j.get_joke(blacklist=['nsfw', 'racist'])  # Will return a joke that does not have either the flag "nsfw" or "racist".
 ```
 
 ---
@@ -91,7 +91,7 @@ If left blank it will default to `json`.
 #### Example
 
 ```python
-  joke = get_joke(response_format="xml")  # Will return a joke in xml format.
+  joke = j.get_joke(response_format="xml")  # Will return a joke in xml format.
 ```
 
 ---
@@ -108,7 +108,7 @@ If left blank it will default to `Any`
 #### Example
 
 ```python
-  joke = get_joke(type="twopart")  # Will return a twopart joke; both a setup and a delivery.
+  joke = j.get_joke(type="twopart")  # Will return a twopart joke; both a setup and a delivery.
 ```
 
 ---
@@ -122,7 +122,7 @@ If left blank it will default to `None`
 #### Example
 
 ```python
-  joke = get_joke(search_string="the")  # Will return a joke with the word "the" in it.
+  joke = j.get_joke(search_string="the")  # Will return a joke with the word "the" in it.
   # If there are no jokes then it will return the error from the API.
 ```
 
@@ -140,7 +140,7 @@ If left blank it will default to the maximum range.
 #### Example
 
 ```python
-  joke = get_joke(id_range=[10,100])  # Will return a joke with the ID between 10 and 100.
+  joke = j.get_joke(id_range=[10,100])  # Will return a joke with the ID between 10 and 100.
 ```
 
 ---
@@ -154,7 +154,7 @@ more requests than normal users. Defaults to None
 #### Example
 
 ```python
-  joke = get_joke(auth_token="aaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbb") # Will send the token to the api in a header.
+  joke = j.get_joke(auth_token="aaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbb") # Will send the token to the api in a header.
 ```
 
 ---
@@ -169,7 +169,7 @@ to change it
 #### Example
 
 ```python
-  joke = get_joke(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0")
+  joke = j.get_joke(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0")
   # This is in fact the default user agent, and tells the API that we are visitng the page from a Firefox 77.0
   # browser using Windows 10 64bit.
 ```
@@ -185,7 +185,7 @@ Defaults to False.
 #### Example
 
 ```python
-  response = get_joke(return_headers=True)
+  response = j.get_joke(return_headers=True)
   joke = response[0]
   headers = response[1]
   # The function returns the joke and then the headers using the "return x, y" syntax, so you can index it like a list or tuple.
