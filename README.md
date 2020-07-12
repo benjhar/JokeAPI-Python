@@ -1,6 +1,8 @@
 # Sv443's Joke API Wrapper
 
-[![Downloads](https://pepy.tech/badge/jokeapi)](https://pepy.tech/downloads/jokeapi)
+[![Downloads](https://pepy.tech/badge/jokeapi)](https://pepy.tech/project/jokeapi)
+[![Downloads](https://pepy.tech/badge/jokeapi/month)](https://pepy.tech/project/jokeapi/month)
+[![Downloads](https://pepy.tech/badge/jokeapi/week)](https://pepy.tech/project/jokeapi/week)
 [![CircleCI](https://circleci.com/gh/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper.svg?style=svg)](https://circleci.com/gh/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper)
 
 An API wrapper for Sv443's joke api which provides simple yet versatile functionality,
