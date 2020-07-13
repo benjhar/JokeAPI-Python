@@ -16,7 +16,11 @@ setuptools.setup(
     url="""https://github.com/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper""",
     download_url="https://github.com/user/Sv443s-JokeAPI-Python-Wrapper/archive/v0.2.2.tar.gz",
     keywords=["api wrapper", "wrapper", "api", "jokes", "python", "joke api"],
-    install_requires=setuptools.find_packages(),
+    install_requires=[
+        "urllib3==1.25.8",
+        "simplejson==3.17.0",
+        "python-dotenv==0.13.0"
+    ],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
