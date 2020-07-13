@@ -36,7 +36,7 @@ have made a lot of requests recently
   from jokeapi import Jokes # Import the Jokes class
 
   j = Jokes()  # Initialise the class
-  joke = j.get_joke()  # Retrieve a random joke
+  joke = j.get_joke()[0]  # Retrieve a random joke
   if joke["type"] == "single": # Print the joke
     print(joke["joke"])
   else:
