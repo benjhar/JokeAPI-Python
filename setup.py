@@ -14,7 +14,7 @@ setuptools.setup(
     author="thenamesweretakenalready",
     author_email="leet_haker@cyber-wizard.com",
     url="""https://github.com/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper""",
-    download_url="https://github.com/user/Sv443s-JokeAPI-Python-Wrapper/archive/v0.2.2.tar.gz",
+    download_url="https://github.com/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper/archive/v0.2.2.tar.gz",
     keywords=["api wrapper", "wrapper", "api", "jokes", "python", "joke api"],
     install_requires=[
         "urllib3==1.25.8",
