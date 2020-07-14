@@ -62,7 +62,7 @@ class Jokes:
 
         if response_format not in ["json", "xml", "yaml", "txt"]:
             raise Exception(
-                "Response format must be either json, xml or yaml."
+                "Response format must be either json, xml, txt or yaml."
             )
         if type:
             if type not in ["single", "twopart"]:
