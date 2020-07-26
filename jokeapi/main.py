@@ -46,7 +46,7 @@ class Jokes:
                 ]:
                     raise ValueError(
                         '''\n\n
-                        You have blacklisted flags which are not available.
+                        You have blacklisted flags which are not available or you have not put the flags in an array.
                         Available flags are:
                             "racist"
                             "religious"
