@@ -7,6 +7,7 @@ import re
 class Jokes:
     def __init__(self):
         self.http = urllib3.PoolManager()
+        self.info = self.http.request('GET', "https://sv443.net/jokeapi/v2/info")
         print("Sv443's JokeAPI")
 
     def build_request(
@@ -24,7 +25,7 @@ class Jokes:
 
         if len(category):
             for c in category:
-                if not c.lower() in ["programming", "miscellaneous", "dark", "pun"]:
+                if not c.lower() in self.info["categories"]:
                     raise ValueError(
                         f'''Invalid category selected.
                         You selected {c}.
@@ -36,28 +37,21 @@ class Jokes:
                         Leave blank for any.'''
                     )
 
-            cats = ",".join(category) + "?"
+            cats = ",".join(category)
         else:
-            cats = "Any?"
+            cats = "Any"
 
         if len(blacklist) > 0:
             for b in blacklist:
-                if b not in [
-                    "nsfw",
-                    "religious",
-                    "political",
-                    "racist",
-                    "sexist"
-                ]:
+                if b not in self.info["flags"]:
                     raise ValueError(
-                        '''\n\n
+                        f'''
+
+
                         You have blacklisted flags which are not available or you have not put the flags in a list.
                         Available flags are:
-                            "racist"
-                            "religious"
-                            "political"
-                            "sexist"
-                            "nsfw"
+                            {"""
+                            """.join(self.info["flags"])}
                         '''
                     )
                     return
@@ -86,13 +80,7 @@ class Jokes:
             else:
                 search_string = urllib.parse.quote(search_string)
         if id_range:
-
-            response = self.http.request(
-                'GET',
-                "https://sv443.net/jokeapi/v2/info"
-            )
-            dict = json.loads(response.data)
-            range_limit = dict["jokes"]["totalCount"]
+            range_limit = self.info["totalCount"]
 
             if len(id_range) > 2:
                 raise ValueError("id_range must be no longer than 2 items.")
@@ -143,13 +131,13 @@ class Jokes:
                                   request,
                                   headers={'Authorization': str(auth_token),
                                            'user-agent': str(user_agent),
-                                           'accept-encoding': 'gzip'
+                                           #'accept-encoding': 'gzip'
                                           }
                                   )
         else:
             r = self.http.request('GET', request, headers={'user-agent': str(user_agent)})
 
-        data = r.data
+        data = r.data.decode('utf-8')
 
         if response_format == "json":
             try:
@@ -158,7 +146,6 @@ class Jokes:
                 print(data)
                 raise
         else:
-            data = str(data)[2:-1].replace(r'\n', '\n').replace('\\', '')
             if len(' '.join(re.split("error", data.lower().replace("\n", "NEWLINECHAR"))[0:][1:]).replace(
                     '<', '').replace('/', '').replace(' ', '').replace(':', '').replace('>', '').replace('NEWLINECHAR', '\n')) == 4:
                 return [Exception(f"API returned an error. Full response: \n\n {data}")]
@@ -183,7 +170,7 @@ class Jokes:
         type=None,
         search_string=None,
         id_range=None,
-        amount=None,
+        amount=1,
         lang=None,
         auth_token=None,
         user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0",
