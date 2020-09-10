@@ -8,6 +8,8 @@ class Jokes:
     def __init__(self):
         self.http = urllib3.PoolManager()
         self.info = self.http.request('GET', "https://sv443.net/jokeapi/v2/info")
+        self.info = data = json.loads(self.info.data.decode('utf-8'))["jokes"]
+        print(self.info)
         print("Sv443's JokeAPI")
 
     def build_request(
