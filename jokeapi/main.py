@@ -26,15 +26,13 @@ class Jokes:
 
         if len(category):
             for c in category:
-                if not c.lower() in self.info["categories"]:
+                if not c.title() in self.info["categories"]:
                     raise ValueError(
                         f'''Invalid category selected.
                         You selected {c}.
                         Available categories are:
-                            "programming"
-                            "miscellaneous"
-                            "dark"
-                            "pun".
+                        {"""
+                        """.join(self.info["categories"])}
                         Leave blank for any.'''
                     )
 
