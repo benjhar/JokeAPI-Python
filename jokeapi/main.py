@@ -26,7 +26,7 @@ class Jokes:
 
         if len(category):
             for c in category:
-                if not c.title() in self.info["categories"]:
+                if not c.lower() in self.info["categories"]:
                     raise ValueError(
                         f'''Invalid category selected.
                         You selected {c}.
