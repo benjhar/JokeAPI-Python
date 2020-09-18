@@ -15,7 +15,6 @@ class Jokes:
         self.http = urllib3.PoolManager()
         self.info = self.http.request('GET', "https://sv443.net/jokeapi/v2/info")
         self.info = data = json.loads(self.info.data.decode('utf-8'))["jokes"]
-        print("Sv443's JokeAPI")
 
     def build_request(
         self,
@@ -32,7 +31,7 @@ class Jokes:
 
         if len(category):
             for c in category:
-                if not c.lower() in self.info["categories"]:
+                if not c.title() in self.info["categories"]:
                     raise ValueError(
                         f'''Invalid category selected.
                         You selected {c}.
