@@ -13,6 +13,9 @@ import xml.etree.ElementTree
 class Jokes:
     def __init__(self):
         self.http = urllib3.PoolManager()
+        self.info = self.http.request('GET', "https://sv443.net/jokeapi/v2/info")
+        self.info = data = json.loads(self.info.data.decode('utf-8'))["jokes"]
+        print("Sv443's JokeAPI")
 
     def build_request(
         self,
@@ -22,42 +25,38 @@ class Jokes:
         type=None,
         search_string=None,
         id_range=None,
+        amount=1,
+        lang="en"
     ):
         r = "https://sv443.net/jokeapi/v2/joke/"
 
-        if len(category) > 0:
+        if len(category):
             for c in category:
-                if not c.lower() in ["programming", "miscellaneous", "dark"]:
+                if not c.lower() in self.info["categories"]:
                     raise ValueError(
-                        '''Invalid category selected. Available categories are:
-                            "programming"
-                            "miscellaneous"
-                            "dark".
+                        f'''Invalid category selected.
+                        You selected {c}.
+                        Available categories are:
+                        {"""
+                        """.join(self.info["categories"])}
                         Leave blank for any.'''
                     )
-                    return
+
             cats = ",".join(category)
         else:
             cats = "Any"
 
         if len(blacklist) > 0:
             for b in blacklist:
-                if b not in [
-                    "nsfw",
-                    "religious",
-                    "political",
-                    "racist",
-                    "sexist"
-                ]:
+                if b not in self.info["flags"]:
                     raise ValueError(
-                        '''\n\n
-                        You have blacklisted flags which are not available.
+                        f'''
+
+
+                        You have blacklisted flags which are not available or you have not put the flags in a list.
                         Available flags are:
-                            "racist"
-                            "religious"
-                            "political"
-                            "sexist"
-                            "nsfw"
+                            {"""
+                            """.join(self.info["flags"])}
                         '''
                     )
                     return
@@ -86,13 +85,7 @@ class Jokes:
             else:
                 search_string = urllib.parse.quote(search_string)
         if id_range:
-
-            response = self.http.request(
-                'GET',
-                "https://sv443.net/jokeapi/v2/info"
-            )
-            dict = json.loads(response.data)
-            range_limit = dict["jokes"]["totalCount"]
+            range_limit = self.info["totalCount"]
 
             if len(id_range) > 2:
                 raise ValueError("id_range must be no longer than 2 items.")
@@ -107,45 +100,49 @@ class Jokes:
 
         r += cats
 
-        prev_flags = None
+        r += f"?format={response_format}"
 
         if blacklistFlags:
-            r += f"?blacklistFlags={blacklistFlags}"
-            prev_flags = True
-        if prev_flags:
-            r += f"&format={response_format}"
-        else:
-            r += f"?format={response_format}"
-            prev_flags = True
-        if prev_flags:
-            r += f"&type={type}"
-        else:
-            r += f"?type={type}"
-            prev_flags = True
+            r += f"&blacklistFlags={blacklistFlags}"
+
+
+        r += f"&type={type}"
+
         if search_string:
-            if prev_flags:
-                r += f"&contains={search_string}"
-                prev_flags = True
-            else:
-                r += f"?contains={search_string}"
+            r += f"&contains={search_string}"
         if id_range:
-            if prev_flags:
-                r += f"&idRange={id_range[0]}-{id_range[1]}"
-            else:
-                r += f"?idRange={id_range[0]}-{id_range[1]}"
+            r += f"i&dRange={id_range[0]}-{id_range[1]}"
+        if amount > 10:
+            raise ValueError(
+            f"amount parameter must be no greater than 10. you passed {amount}."
+            )
+        r += f"&amount={amount}"
+
+        r += f"&lang={lang}"
 
         return r
 
-    def send_request(self, request, response_format, return_headers, auth_token, user_agent):
+    def send_request(self,
+                     request,
+                     response_format,
+                     return_headers,
+                     auth_token,
+                     user_agent
+    ):
         returns = []
 
         if auth_token:
-            r = self.http.request('GET', request, headers={'Authorization': str(
-                auth_token), 'user-agent': str(user_agent)})
+            r = self.http.request('GET',
+                                  request,
+                                  headers={'Authorization': str(auth_token),
+                                           'user-agent': str(user_agent),
+                                           #'accept-encoding': 'gzip'
+                                          }
+                                  )
         else:
             r = self.http.request('GET', request, headers={'user-agent': str(user_agent)})
 
-        data = r.data
+        data = r.data.decode('utf-8')
 
         if response_format == "json":
             try:
@@ -153,6 +150,10 @@ class Jokes:
             except:
                 print(data)
                 raise
+        else:
+            if len(' '.join(re.split("error", data.lower().replace("\n", "NEWLINECHAR"))[0:][1:]).replace(
+                    '<', '').replace('/', '').replace(' ', '').replace(':', '').replace('>', '').replace('NEWLINECHAR', '\n')) == 4:
+                return [Exception(f"API returned an error. Full response: \n\n {data}")]
 
         headers = str(r.headers).replace(r'\n', '').replace(
             '\n', '').replace(r'\\', '').replace(r"\'", '')[15:-1]
@@ -176,12 +177,14 @@ class Jokes:
         type=None,
         search_string=None,
         id_range=None,
+        amount=1,
+        lang=None,
         auth_token=None,
         user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0",
         return_headers=False
     ):
         r = self.build_request(
-            category, blacklist, response_format, type, search_string, id_range
+            category, blacklist, response_format, type, search_string, id_range, amount, lang
         )
 
         response = self.send_request(r, response_format, return_headers, auth_token, user_agent)
