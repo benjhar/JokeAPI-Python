@@ -2,12 +2,17 @@ import urllib3
 import urllib
 import simplejson as json
 import re
+from yaml import load, dump
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
 
+import xml.etree.ElementTree
 
 class Jokes:
     def __init__(self):
         self.http = urllib3.PoolManager()
-        print("Sv443's JokeAPI")
 
     def build_request(
         self,
@@ -148,11 +153,6 @@ class Jokes:
             except:
                 print(data)
                 raise
-        else:
-            data = str(data)[2:-1].replace(r'\n', '\n').replace('\\', '')
-            if len(' '.join(re.split("error", data.lower().replace("\n", "NEWLINECHAR"))[0:][1:]).replace(
-                    '<', '').replace('/', '').replace(' ', '').replace(':', '').replace('>', '').replace('NEWLINECHAR', '\n')) == 4:
-                return [Exception(f"API returned an error. Full response: \n\n {data}")]
 
         headers = str(r.headers).replace(r'\n', '').replace(
             '\n', '').replace(r'\\', '').replace(r"\'", '')[15:-1]
@@ -164,7 +164,9 @@ class Jokes:
         if auth_token:
             returns.append({"Token-Valid": bool(int(re.split(r"Token-Valid", headers)[1][4]))})
 
-        return returns
+        if len(returns) > 1:
+            return returns
+        return returns[0]
 
     def get_joke(
         self,
