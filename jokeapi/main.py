@@ -2,13 +2,7 @@ import urllib3
 import urllib
 import simplejson as json
 import re
-from yaml import load, dump
-try:
-    from yaml import CLoader as Loader, CDumper as Dumper
-except ImportError:
-    from yaml import Loader, Dumper
 
-import xml.etree.ElementTree
 
 class Jokes:
     def __init__(self):
