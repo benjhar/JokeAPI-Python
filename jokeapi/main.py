@@ -24,7 +24,7 @@ class Jokes:
     ):
         r = "https://sv443.net/jokeapi/v2/joke/"
 
-        if any(c not in self.info["categories"] for c in category):
+        if any(c.title() not in self.info["categories"] for c in category):
             raise ValueError(
                 f'''Invalid category selected.
                 You selected {category}.
