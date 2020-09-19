@@ -27,7 +27,7 @@ class Jokes:
         if any(c not in self.info["categories"] for c in category):
             raise ValueError(
                 f'''Invalid category selected.
-                You selected {c}.
+                You selected {category}.
                 Available categories are:
                 {"""
                 """.join(self.info["categories"])}
