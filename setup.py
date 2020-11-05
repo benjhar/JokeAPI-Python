@@ -3,7 +3,7 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-version = "0.2.7"
+version = "0.2.8"
 
 setuptools.setup(
     name="jokeapi",
