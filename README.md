@@ -115,19 +115,20 @@ If left blank it will default to `json`.
 
 ---
 
-#### type
+#### joke_type
 
 The type of joke returned.
 Options are:
 `single`,
-`twopart`
+`twopart`,
+`Any`
 
 If left blank it will default to `Any`
 
 ##### Example
 
 ```python
-  joke = j.get_joke(type="twopart")  # Will return a twopart joke; both a setup and a delivery.
+  joke = j.get_joke(joke_type="twopart")  # Will return a twopart joke; both a setup and a delivery.
 ```
 
 ---

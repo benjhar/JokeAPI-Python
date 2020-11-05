@@ -76,12 +76,12 @@ except Exception as e:
 
 """Testing for errors in type"""
 try:
-    j.get_joke(type="single", auth_token=token)
+    j.get_joke(joke_type="single", auth_token=token)
 except Exception as e:
     errors.append({'Error in':  'type single', 'Error': e})
 
 try:
-    j.get_joke(type="twopart", auth_token=token)
+    j.get_joke(joke_type="twopart", auth_token=token)
 except Exception as e:
     errors.append({'Error in':  'type double', 'Error': e})
 

@@ -33,7 +33,7 @@ class Jokes:
         category=[],
         blacklist=[],
         response_format="json",
-        type="Any",
+        joke_type="Any",
         search_string="",
         id_range=[],
         amount=1,
@@ -82,15 +82,15 @@ class Jokes:
             raise ResponseTypeError(
                 "Response format must be either json, xml, txt or yaml."
             )
-        if type:
-            if type not in ["single", "twopart"]:
+        if joke_type:
+            if joke_type not in ["single", "twopart", "Any"]:
                 raise JokeTypeError(
                     '''Invalid joke type.
                     Available options are "single" or "twopart".'''
                 )
                 return
         else:
-            type = "Any"
+            joke_type = "Any"
 
         if search_string:
             if not isinstance(search_string, str):
@@ -119,7 +119,7 @@ class Jokes:
         if blacklistFlags:
             r += f"&blacklistFlags={blacklistFlags}"
 
-        r += f"&type={type}"
+        r += f"&type={joke_type}"
 
         if search_string:
             r += f"&contains={search_string}"
@@ -192,7 +192,7 @@ class Jokes:
         category=[],
         blacklist=[],
         response_format="json",
-        type="Any",
+        joke_type="Any",
         search_string="",
         id_range=[],
         amount=1,
@@ -206,7 +206,7 @@ class Jokes:
             category,
             blacklist,
             response_format,
-            type,
+            joke_type,
             search_string,
             id_range,
             amount,
