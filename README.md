@@ -20,11 +20,20 @@ You can install jokeapi through [pip](https://pypi.org/project/pip/) by using `p
 # get_joke
 
 The wrapper is structured in such a way that the end-user should only ever have to
-interact with one function. This function is `get_joke()`.
+interact with one function to get a joke. This function is `get_joke()`.
 
 Please note that urllib3, the core dependency of this wrapper automatically abides by
 `Retry-After` headers, which means you may have to wait a long time for a joke if you
 have made a lot of requests recently
+
+---
+
+# submit_joke
+
+The wrapper also provides simple access to the submit endpoint through the `submit_joke()`
+function.
+
+Note that joke submissions are manually checked and you will be ratelimited.
 
 ---
 
@@ -54,7 +63,8 @@ A list of categories that the returned joke should fit in.
 Options are:
 `programming`,
 `miscellaneous`,
-`dark`
+`dark`,
+`pun`
 
 If left blank it will default to use `Any`.
 
@@ -205,12 +215,12 @@ Defaults to False.
 
 ---
 
-## Returns
+### Returns
 
 Depending on what format is chosen different things will be returned.
 
 
-### json
+#### json
 
 A succesful API call will return:
 
@@ -233,7 +243,7 @@ A succesful API call will return:
 ```
 
 
-### xml
+#### xml
 
 A succesful API call will return:
 
@@ -256,7 +266,7 @@ A succesful API call will return:
 ```
 
 
-### yaml
+#### yaml
 
 A succesful API call will return:
 
@@ -275,7 +285,7 @@ error: false
 ```
 
 
-### txt
+#### txt
 
 A succesful API call will return:
 
@@ -287,12 +297,79 @@ He keeps dropping the database.
 
 ---
 
-## Errors
+### Errors
 
 The wrapper can raise multiple different errors depending on what you did wrong.
 
 The errors are descriptive enough that you should be able to solve them with the information provided in the error message.
 If not, feel free to ask me through one of the channels provided below.
+
+---
+
+## submit_joke
+
+### Example
+
+```python
+from jokeapi import Jokes
+
+j = Jokes()
+
+j.submit_joke("Miscellaneous", "funny haha", {
+    "nsfw": False,
+    "religious": False,
+    "political": False,
+    "racist": False,
+    "sexist": False
+}, lang="de")
+```
+
+---
+
+### Parameters
+
+---
+
+#### category
+
+The category the joke is.
+Options are:
+`programming`,
+`miscellaneous`,
+`dark`,
+`pun`
+
+Has no default value.
+
+---
+
+#### joke
+
+The joke itself. Can either be a single string or a list/tuple, for the setup and
+delivery. Setup should be at index 0 in the tuple, delivery at 1.
+
+Has no default value.
+
+---
+
+#### flags
+
+The flags that the joke should have.
+Options are:
+`nsfw`,
+`religious`,
+`political`,
+`racist`,
+`sexist`
+
+Has no default value.
+
+#### lang
+
+The language code for the language the joke it written in. E.g en for english,
+de for german.
+
+Defaults to `en`
 
 ---
 

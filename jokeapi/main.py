@@ -1,13 +1,31 @@
 import urllib3
 import urllib
+import urllib.request
 import simplejson as json
 import re
+
+
+class CategoryError(Exception):
+    pass
+
+
+class BlacklistError(Exception):
+    pass
+
+
+class ResponseTypeError(Exception):
+    pass
+
+
+class JokeTypeError(Exception):
+    pass
 
 
 class Jokes:
     def __init__(self):
         self.http = urllib3.PoolManager()
-        self.info = self.http.request('GET', "https://sv443.net/jokeapi/v2/info")
+        self.info = self.http.request(
+            'GET', "https://sv443.net/jokeapi/v2/info")
         self.info = data = json.loads(self.info.data.decode('utf-8'))["jokes"]
 
     def build_request(
@@ -26,7 +44,7 @@ class Jokes:
         if len(category):
             for c in category:
                 if not c.title() in self.info["categories"]:
-                    raise ValueError(
+                    raise CategoryError(
                         f'''Invalid category selected.
                         You selected {c}.
                         Available categories are:
@@ -39,31 +57,34 @@ class Jokes:
         else:
             cats = "Any"
 
-        if len(blacklist) > 0:
-            for b in blacklist:
-                if b not in self.info["flags"]:
-                    raise ValueError(
-                        f'''
+        if type(blacklist) in [list, tuple]:
+            if len(blacklist) > 0:
+                for b in blacklist:
+                    if b not in self.info["flags"]:
+                        raise BlacklistError(
+                            f'''
 
 
-                        You have blacklisted flags which are not available or you have not put the flags in a list.
-                        Available flags are:
-                            {"""
-                            """.join(self.info["flags"])}
-                        '''
-                    )
-                    return
-            blacklistFlags = ",".join(blacklist)
+                            You have blacklisted flags which are not available.
+                            Available flags are:
+                                {"""
+                                """.join(self.info["flags"])}
+                            '''
+                        )
+                        return
+                blacklistFlags = ",".join(blacklist)
+            else:
+                blacklistFlags = None
         else:
-            blacklistFlags = None
+            raise BlacklistError(f'''blacklist must be a list or tuple.''')
 
         if response_format not in ["json", "xml", "yaml", "txt"]:
-            raise Exception(
+            raise ResponseTypeError(
                 "Response format must be either json, xml, txt or yaml."
             )
         if type:
             if type not in ["single", "twopart"]:
-                raise ValueError(
+                raise JokeTypeError(
                     '''Invalid joke type.
                     Available options are "single" or "twopart".'''
                 )
@@ -98,7 +119,6 @@ class Jokes:
         if blacklistFlags:
             r += f"&blacklistFlags={blacklistFlags}"
 
-
         r += f"&type={type}"
 
         if search_string:
@@ -107,7 +127,7 @@ class Jokes:
             r += f"i&dRange={id_range[0]}-{id_range[1]}"
         if amount > 10:
             raise ValueError(
-            f"amount parameter must be no greater than 10. you passed {amount}."
+                f"amount parameter must be no greater than 10. you passed {amount}."
             )
         r += f"&amount={amount}"
 
@@ -121,7 +141,7 @@ class Jokes:
                      return_headers,
                      auth_token,
                      user_agent
-    ):
+                     ):
         returns = []
 
         if auth_token:
@@ -129,11 +149,13 @@ class Jokes:
                                   request,
                                   headers={'Authorization': str(auth_token),
                                            'user-agent': str(user_agent),
-                                           #'accept-encoding': 'gzip'
-                                          }
+                                           'accept-encoding': 'gzip'
+                                           }
                                   )
         else:
-            r = self.http.request('GET', request, headers={'user-agent': str(user_agent)})
+            r = self.http.request('GET', request, headers={
+                                  'user-agent': str(user_agent),
+                                  'accept-encoding': 'gzip'})
 
         data = r.data.decode('utf-8')
 
@@ -156,7 +178,8 @@ class Jokes:
             returns.append(headers)
 
         if auth_token:
-            returns.append({"Token-Valid": bool(int(re.split(r"Token-Valid", headers)[1][4]))})
+            returns.append(
+                {"Token-Valid": bool(int(re.split(r"Token-Valid", headers)[1][4]))})
 
         if len(returns) > 1:
             return returns
@@ -180,5 +203,58 @@ class Jokes:
             category, blacklist, response_format, type, search_string, id_range, amount, lang
         )
 
-        response = self.send_request(r, response_format, return_headers, auth_token, user_agent)
+        response = self.send_request(
+            r, response_format, return_headers, auth_token, user_agent)
         return response
+
+    def submit_joke(self, category, joke, flags, lang="en"):
+        request = {"formatVersion": 3}
+
+        if category not in self.info["categories"]:
+            raise CategoryError(
+                f'''Invalid category selected.
+            You selected {category}.
+            Available categories are:
+            {"""
+            """.join(self.info["categories"])}''')
+        request["category"] = category
+
+        if type(joke) in [list, tuple]:
+            if len(joke) > 1:
+                request["type"] = "twopart"
+                request["setup"] = joke[0]
+                request["delivery"] = joke[1]
+            else:
+                request["type"] = "single"
+                request["joke"] = joke[0]
+        else:
+            request["type"] = "single"
+            request["joke"] = joke
+
+        for key in flags.keys():
+            if key not in self.info["flags"]:
+                raise BlacklistError(
+                    f'''
+                You have blacklisted flags which are not available.
+                Available flags are:
+                    {"""
+                    """.join(self.info["flags"])}
+                ''')
+        request["flags"] = flags
+        request["lang"] = lang
+
+        data = str(request).replace("'", '"')
+        data = data.replace(": True", ": true").replace(": False", ": false")
+        data = data.encode('ascii')
+        url = "https://sv443.net/jokeapi/v2/submit"
+
+        try:
+            response = urllib.request.urlopen(url, data=data)
+            data = response.getcode()
+
+            return data
+        except urllib.error.HTTPError as e:
+            body = e.read().decode()  # Read the body of the error response
+
+            _json = json.loads(body)
+            return _json
