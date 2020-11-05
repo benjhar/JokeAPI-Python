@@ -63,11 +63,7 @@ A list of categories that the returned joke should fit in.
 Options are:
 `programming`,
 `miscellaneous`,
-<<<<<<< HEAD
 `dark`,
-=======
-`dark`
->>>>>>> 92362ac33602ee9d5baf7e11f93507b473ebe207
 `pun`
 
 If left blank it will default to use `Any`.
