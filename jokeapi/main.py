@@ -33,9 +33,9 @@ class Jokes:
         category=[],
         blacklist=[],
         response_format="json",
-        type=None,
-        search_string=None,
-        id_range=None,
+        type="Any",
+        search_string="",
+        id_range=[],
         amount=1,
         lang="en"
     ):
@@ -98,19 +98,19 @@ class Jokes:
                 return
             else:
                 search_string = urllib.parse.quote(search_string)
-        if id_range:
-            range_limit = self.info["totalCount"]
+        range_limit = self.info["totalCount"]
 
-            if len(id_range) > 2:
-                raise ValueError("id_range must be no longer than 2 items.")
-            elif id_range[0] < 0:
-                raise ValueError(
-                    "id_range[0] must be greater than or equal to 0."
-                )
-            elif id_range[1] > range_limit:
-                raise ValueError(
-                    f"id_range[1] must be less than or equal to {range_limit-1}."
-                )
+        if len(id_range) and (id_range[1] - id_range[0] > range_limit):
+            raise ValueError(
+                "id_range must be no longer than 2 items, \
+                id_range[0] must be greater than or equal to 0 and \
+                id_range[1] must be less than or equal to {range_limit-1}.")
+
+        if amount > 10:
+            raise ValueError(
+                f"amount parameter must be no greater than 10. \
+                you passed {amount}."
+            )
 
         r += cats
 
@@ -166,9 +166,11 @@ class Jokes:
                 print(data)
                 raise
         else:
-            if len(' '.join(re.split("error", data.lower().replace("\n", "NEWLINECHAR"))[0:][1:]).replace(
-                    '<', '').replace('/', '').replace(' ', '').replace(':', '').replace('>', '').replace('NEWLINECHAR', '\n')) == 4:
-                return [Exception(f"API returned an error. Full response: \n\n {data}")]
+            if len(' '.join(re.split("error", data.lower())[0:][1:]).replace(
+                    '<', '').replace('/', '').replace(' ', '').replace(':', '')
+                    .replace('>', '')) == 4:
+                raise Exception(f"API returned an error. \
+                Full response: \n\n {data}")
 
         headers = str(r.headers).replace(r'\n', '').replace(
             '\n', '').replace(r'\\', '').replace(r"\'", '')[15:-1]
@@ -190,17 +192,25 @@ class Jokes:
         category=[],
         blacklist=[],
         response_format="json",
-        type=None,
-        search_string=None,
-        id_range=None,
+        type="Any",
+        search_string="",
+        id_range=[],
         amount=1,
         lang=None,
         auth_token=None,
-        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0",
+        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) \
+        Gecko/20100101 Firefox/77.0",
         return_headers=False
     ):
         r = self.build_request(
-            category, blacklist, response_format, type, search_string, id_range, amount, lang
+            category,
+            blacklist,
+            response_format,
+            type,
+            search_string,
+            id_range,
+            amount,
+            lang
         )
 
         response = self.send_request(

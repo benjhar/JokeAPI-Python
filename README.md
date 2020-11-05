@@ -63,7 +63,11 @@ A list of categories that the returned joke should fit in.
 Options are:
 `programming`,
 `miscellaneous`,
+<<<<<<< HEAD
 `dark`,
+=======
+`dark`
+>>>>>>> 92362ac33602ee9d5baf7e11f93507b473ebe207
 `pun`
 
 If left blank it will default to use `Any`.
@@ -107,7 +111,7 @@ Options are:
 
 If left blank it will default to `json`.
 
-#### Example
+##### Example
 
 ```python
   joke = j.get_joke(response_format="xml")  # Will return a joke in xml format.
@@ -115,7 +119,7 @@ If left blank it will default to `json`.
 
 ---
 
-### type
+#### type
 
 The type of joke returned.
 Options are:
@@ -124,7 +128,7 @@ Options are:
 
 If left blank it will default to `Any`
 
-#### Example
+##### Example
 
 ```python
   joke = j.get_joke(type="twopart")  # Will return a twopart joke; both a setup and a delivery.
@@ -132,13 +136,13 @@ If left blank it will default to `Any`
 
 ---
 
-### search_string
+#### search_string
 
 A string to search for in jokes.
 
 If left blank it will default to `None`
 
-#### Example
+##### Example
 
 ```python
   joke = j.get_joke(search_string="the")  # Will return a joke with the word "the" in it.
@@ -147,7 +151,7 @@ If left blank it will default to `None`
 
 ---
 
-### id_range
+#### id_range
 
 The range in which the selected joke should fall. ID's are decided by the order in which jokes are submitted.
 The argument passes should be in form of list or tuple, and should not exceed length of 2 items. First item
@@ -156,7 +160,7 @@ should be minimum 0. Maximum value can be determined [here](https://sv443.net/jo
 If left blank it will default to the maximum range.
 
 
-#### Example
+##### Example
 
 ```python
   joke = j.get_joke(id_range=[10,100])  # Will return a joke with the ID between 10 and 100.
@@ -164,13 +168,40 @@ If left blank it will default to the maximum range.
 
 ---
 
-### auth_token
+#### amount
+
+The amount of jokes you want the api to return. Will return them in a list. Maximum number is 10 jokes, and the
+api defaults to 1 if you use a number larger than the maximum. Defaults to 1.
+
+
+##### Example
+
+```python
+  joke = j.get_joke(amount=2) # Will return 2 jokes.
+```
+
+---
+
+#### lang
+
+The language that the joke and response should be in. Currently supported languages are in the official api
+documentation. Defaults to en.
+
+##### Example
+
+```python
+  joke = j.get_joke(lang="de")
+```
+
+---
+
+#### auth_token
 
 A string token provided by the api owner. Using it will mean you are whitelisted by the api and can make
 more requests than normal users. Defaults to None
 
 
-#### Example
+##### Example
 
 ```python
   joke = j.get_joke(auth_token="aaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbb") # Will send the token to the api in a header.
@@ -178,14 +209,14 @@ more requests than normal users. Defaults to None
 
 ---
 
-### user_agent
+#### user_agent
 
 A string sent the the api that tells the api what browser you are (pretending to be). The default user agent
 is Mozilla Firefox from Windows 10 and should work fine, but the functionality is provided in case you wish
 to change it
 
 
-#### Example
+##### Example
 
 ```python
   joke = j.get_joke(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0")
@@ -195,19 +226,19 @@ to change it
 
 ---
 
-### return_headers
+#### return_headers
 
 A boolean value (True or False) that tells the wrapper if you wish to receive headers in the return from the function.
+Will return a list instead of a single value
 Defaults to False.
 
 
-#### Example
+##### Example
 
 ```python
   response = j.get_joke(return_headers=True)
   joke = response[0]
   headers = response[1]
-  # The function returns the joke and then the headers using the "return x, y" syntax, so you can index it like a list or tuple.
 
   print(f"Joke: {joke}")
   print(f"Headers: {headers}")
