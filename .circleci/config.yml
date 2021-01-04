@@ -29,7 +29,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            python test_main.py
+            python tests/test_main.py
 
   test-3.6:
     <<: *tests

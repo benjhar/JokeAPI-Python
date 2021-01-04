@@ -24,9 +24,8 @@ class JokeTypeError(Exception):
 class Jokes:
     def __init__(self):
         self.http = urllib3.PoolManager()
-        self.info = self.http.request(
-            'GET', "https://sv443.net/jokeapi/v2/info")
-        self.info = data = json.loads(self.info.data.decode('utf-8'))["jokes"]
+        self.info = self.http.request("GET", "https://sv443.net/jokeapi/v2/info")
+        self.info = data = json.loads(self.info.data.decode("utf-8"))["jokes"]
 
     def build_request(
         self,
@@ -37,7 +36,7 @@ class Jokes:
         search_string="",
         id_range=[],
         amount=1,
-        lang="en"
+        lang="en",
     ):
         r = "https://sv443.net/jokeapi/v2/joke/"
 
@@ -76,7 +75,7 @@ class Jokes:
             else:
                 blacklistFlags = None
         else:
-            raise BlacklistError(f'''blacklist must be a list or tuple.''')
+            raise BlacklistError(f"""blacklist must be a list or tuple.""")
 
         if response_format not in ["json", "xml", "yaml", "txt"]:
             raise ResponseTypeError(
@@ -85,8 +84,8 @@ class Jokes:
         if joke_type:
             if joke_type not in ["single", "twopart", "Any"]:
                 raise JokeTypeError(
-                    '''Invalid joke type.
-                    Available options are "single" or "twopart".'''
+                    """Invalid joke type.
+                    Available options are "single" or "twopart"."""
                 )
                 return
         else:
@@ -104,7 +103,8 @@ class Jokes:
             raise ValueError(
                 "id_range must be no longer than 2 items, \
                 id_range[0] must be greater than or equal to 0 and \
-                id_range[1] must be less than or equal to {range_limit-1}.")
+                id_range[1] must be less than or equal to {range_limit-1}."
+            )
 
         if amount > 10:
             raise ValueError(
@@ -135,29 +135,29 @@ class Jokes:
 
         return r
 
-    def send_request(self,
-                     request,
-                     response_format,
-                     return_headers,
-                     auth_token,
-                     user_agent
-                     ):
+    def send_request(
+        self, request, response_format, return_headers, auth_token, user_agent
+    ):
         returns = []
 
         if auth_token:
-            r = self.http.request('GET',
-                                  request,
-                                  headers={'Authorization': str(auth_token),
-                                           'user-agent': str(user_agent),
-                                           'accept-encoding': 'gzip'
-                                           }
-                                  )
+            r = self.http.request(
+                "GET",
+                request,
+                headers={
+                    "Authorization": str(auth_token),
+                    "user-agent": str(user_agent),
+                    "accept-encoding": "gzip",
+                },
+            )
         else:
-            r = self.http.request('GET', request, headers={
-                                  'user-agent': str(user_agent),
-                                  'accept-encoding': 'gzip'})
+            r = self.http.request(
+                "GET",
+                request,
+                headers={"user-agent": str(user_agent), "accept-encoding": "gzip"},
+            )
 
-        data = r.data.decode('utf-8')
+        data = r.data.decode("utf-8")
 
         if response_format == "json":
             try:
@@ -166,14 +166,29 @@ class Jokes:
                 print(data)
                 raise
         else:
-            if len(' '.join(re.split("error", data.lower())[0:][1:]).replace(
-                    '<', '').replace('/', '').replace(' ', '').replace(':', '')
-                    .replace('>', '')) == 4:
-                raise Exception(f"API returned an error. \
-                Full response: \n\n {data}")
+            if (
+                len(
+                    " ".join(re.split("error", data.lower())[0:][1:])
+                    .replace("<", "")
+                    .replace("/", "")
+                    .replace(" ", "")
+                    .replace(":", "")
+                    .replace(">", "")
+                )
+                == 4
+            ):
+                raise Exception(
+                    f"API returned an error. \
+                Full response: \n\n {data}"
+                )
 
-        headers = str(r.headers).replace(r'\n', '').replace(
-            '\n', '').replace(r'\\', '').replace(r"\'", '')[15:-1]
+        headers = (
+            str(r.headers)
+            .replace(r"\n", "")
+            .replace("\n", "")
+            .replace(r"\\", "")
+            .replace(r"\'", "")[15:-1]
+        )
 
         returns.append(data)
         if return_headers:
@@ -181,7 +196,8 @@ class Jokes:
 
         if auth_token:
             returns.append(
-                {"Token-Valid": bool(int(re.split(r"Token-Valid", headers)[1][4]))})
+                {"Token-Valid": bool(int(re.split(r"Token-Valid", headers)[1][4]))}
+            )
 
         if len(returns) > 1:
             return returns
@@ -200,7 +216,7 @@ class Jokes:
         auth_token=None,
         user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) \
         Gecko/20100101 Firefox/77.0",
-        return_headers=False
+        return_headers=False,
     ):
         r = self.build_request(
             category,
@@ -210,11 +226,12 @@ class Jokes:
             search_string,
             id_range,
             amount,
-            lang
+            lang,
         )
 
         response = self.send_request(
-            r, response_format, return_headers, auth_token, user_agent)
+            r, response_format, return_headers, auth_token, user_agent
+        )
         return response
 
     def submit_joke(self, category, joke, flags, lang="en"):
@@ -226,7 +243,8 @@ class Jokes:
             You selected {category}.
             Available categories are:
             {"""
-            """.join(self.info["categories"])}''')
+            """.join(self.info["categories"])}'''
+            )
         request["category"] = category
 
         if type(joke) in [list, tuple]:
@@ -249,13 +267,14 @@ class Jokes:
                 Available flags are:
                     {"""
                     """.join(self.info["flags"])}
-                ''')
+                '''
+                )
         request["flags"] = flags
         request["lang"] = lang
 
         data = str(request).replace("'", '"')
         data = data.replace(": True", ": true").replace(": False", ": false")
-        data = data.encode('ascii')
+        data = data.encode("ascii")
         url = "https://sv443.net/jokeapi/v2/submit"
 
         try:
