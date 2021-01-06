@@ -27,7 +27,7 @@ try:
 except Exception as e:
     errors.append({"Error in": "category programming", "Error": e})
 try:
-    j.get_joke(category=["miscellaneous"], auth_token=token)
+    j.get_joke(category=["misc"], auth_token=token)
 except Exception as e:
     errors.append({"Error in": "category miscellaneous", "Error": e})
 try:
