@@ -42,7 +42,7 @@ jobs:
       - run:
           name: Run Pytest, report coverage
           command: |
-            poetry -m pytest
+            poetry run pytest
 
   # This is the definition of another job, the one we use to publish the package to PyPI
   deployment:
