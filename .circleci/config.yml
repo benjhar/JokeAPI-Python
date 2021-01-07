@@ -42,8 +42,7 @@ jobs:
       - run:
           name: Run Pytest, report coverage
           command: |
-            poetry run coverage run --omit="/home/circleci/.cache/pypoetry/virtualenvs" -m pytest
-            poetry run coveralls
+            pytest
 
   # This is the definition of another job, the one we use to publish the package to PyPI
   deployment:
