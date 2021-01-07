@@ -1,37 +1,100 @@
-# Python CircleCI 2.0 configuration file
+# https://gist.github.com/jonatasbaldin/b0eba2ac8ee887ca27ee811697d4d73b
 version: 2
-workflows:
-    version: 2
-    test:
-        jobs:
-        - test-3.8
-        - test-3.6
 
 jobs:
-  test-3.8: &tests
+
+  # Building and testing the project
+  # Useful when a PR is open, for example
+  build-and-test:
+    # Our environment, Python 3.6.8
     docker:
       - image: circleci/python:3.8
 
-    working_directory: ~/repo
-
+    # The steps for our build-and-test
     steps:
-      # Step 1: obtain repo from GitHub
+      # Get the code
       - checkout
-      # Step 2: create virtual env and install dependencies
-      - run:
-          name: install dependencies
-          command: |
-            python -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-      # Step 3: run linter and tests
-      - run:
-          name: run tests
-          command: |
-            . venv/bin/activate
-            python tests/test_main.py
 
-  test-3.6:
-    <<: *tests
+      # Cache can be tricky at first, but this means
+      # Please, restore my cache (what is actually on the cache will be defined later)
+      # if the text key `deps-{{ checksum "poetry.lock" }}` changes (and it WILL change everytime poetry.lock is updated since we rely on its checksum)
+      # and poetry.lock is updated every time we add a new dependency to our project
+      - restore_cache:
+          keys:
+            - deps-{{ checksum "poetry.lock" }}
+
+      # Let's install the dependencies
+      - run:
+          name: Install Dependencies
+          command: |
+            poetry install
+
+      # Save's the specified path as a cache. This is the path Poetry uses to install the dependencies
+      # So if you don't install anything new, this folder won't change and the cache will be effective
+      - save_cache:
+          key: deps-{{ checksum "poetry.lock" }}
+          paths:
+            - /home/circleci/.cache/pypoetry/virtualenvs
+
+      # Another step, run flake8
+      - run:
+          name: Run flake8
+          command: |
+            poetry run flake8 .
+
+      # Last step, runs our tests ommiting the dependencies path (so we don't take their coverage into account)
+      # And send our coverage somewhere, in this case, coveralls
+      - run:
+          name: Run Pytest, report coverage
+          command: |
+            poetry run coverage run --omit="/home/circleci/.cache/pypoetry/virtualenvs" -m pytest
+            poetry run coveralls
+
+  # This is the definition of another job, the one we use to publish the package to PyPI
+  deployment:
+
+    # Same environment
     docker:
-      - image: circleci/python:3.6
+        - image: circleci/python:3.6.8
+      steps:
+
+        # Gets the code
+        - checkout
+
+        # Use `poetry publish` to Publish he package using username and password from CircleCI environment variables
+        # Which can be configured inside CircleCI's interface
+        - run:
+            name: Push to PyPI
+            command: |
+              poetry publish --build --username "${PYPI_USERNAME}" --password "${PYPI_PASSWORD}" --no-interaction
+
+# In the workflows section, we specify when we want to run the jobs defined
+workflows:
+  version: 2
+
+  # The build-and-test we will run EVERYTIME a piece of code changes
+  build-and-test-workflow:
+    jobs:
+      - build-and-test
+
+  # The deployment workflow publishes the package
+  deployment-workflow:
+    jobs:
+
+      # Runs build and test, but now just on Git tags (created from a GitHub release)
+      - build-and-test:
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+
+      # Runs the deployment job, just with the tags as well
+      - deployment:
+          requires:
+            - build-and-test
+          filters:
+              tags:
+                only: /v[0-9]+(\.[0-9]+)*/
+              branches:
+                ignore: /.*/t

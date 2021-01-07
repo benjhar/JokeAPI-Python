@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "sv443s-jokeapi-python-wrapper"
-version = "0.1.0"
-description = ""
-authors = ["Leet Hakker <leet_haker@cyber-wizard.com>"]
+name = "jokeapi"
+version = "0.2.9"
+description = "An API wrapper for Sv443's JokeAPI"
+authors = ["leet hakker <leet_haker@cyber-wizard.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
@@ -17,5 +17,10 @@ mypy = "^0.790"
 
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.0.0",
+    	    "setuptools>=30.3.0,<50",
+	    "wheel",
+	    "pytest-runner",
+	    "setuptools_scm>=3.3.1",
+	    ]
 build-backend = "poetry.core.masonry.api"
