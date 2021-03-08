@@ -101,6 +101,20 @@ def test_main():
     except Exception as e:
         errors.append({"Error in": "id_range", "Error": e})
 
+    """Testing for errors in safe_mode"""
+    try:
+        j.get_joke(safe_mode=True, auth_token=token)
+    except Exception as e:
+        errors.append({"Error in": "safe_mode", "Error": e})
+
+
+    """    Testing jokeapi.submit_joke()    """
+    try:
+        j.submit_joke("Programming", ["foo", "bar"], {}, dry_run=True)
+    except Exception as e:
+        errors.append({"Error in": "dry_run", "Error": e})
+
+
     if len(errors):
         for e in errors:
             print(f"Error in:  {e['Error in']}\nError: {e['Error']}")

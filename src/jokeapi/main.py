@@ -36,6 +36,7 @@ class Jokes:
         search_string="",
         id_range=[],
         amount=1,
+        safe_mode=False,
         lang="en",
     ):
         r = "https://sv443.net/jokeapi/v2/joke/"
@@ -133,6 +134,8 @@ class Jokes:
 
         r += f"&lang={lang}"
 
+        r += f"{'&safe-mode'}*safe_mode"
+
         return r
 
     def send_request(
@@ -212,6 +215,7 @@ class Jokes:
         search_string="",
         id_range=[],
         amount=1,
+        safe_mode=False,
         lang=None,
         auth_token=None,
         user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) \
@@ -226,6 +230,7 @@ class Jokes:
             search_string,
             id_range,
             amount,
+            safe_mode,
             lang,
         )
 
@@ -234,7 +239,7 @@ class Jokes:
         )
         return response
 
-    def submit_joke(self, category, joke, flags, lang="en"):
+    def submit_joke(self, category, joke, flags, lang="en", dry_run=False):
         request = {"formatVersion": 3}
 
         if category not in self.info["categories"]:
@@ -275,7 +280,7 @@ class Jokes:
         data = str(request).replace("'", '"')
         data = data.replace(": True", ": true").replace(": False", ": false")
         data = data.encode("ascii")
-        url = "https://sv443.net/jokeapi/v2/submit"
+        url = f"https://sv443.net/jokeapi/v2/submit{'?dry-run'*dry_run}"
 
         try:
             response = urllib.request.urlopen(url, data=data)
