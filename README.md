@@ -401,7 +401,19 @@ Defaults to `en`
 
 ---
 
-Developer contact:
+
+## Contributors
+
+[ThatCopy](https://github.com/ThatCopy)
+ - [27994f7](https://github.com/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper/commit/27994f74fdea51cb2ddcee9ea127d393868aca00)
+ - [01b578c](https://github.com/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper/commit/01b578cbb500d02ff27925459223e40505aafe96)
+
+[kdiri](https://github.com/kdiri)
+ - [3e20cd1](https://github.com/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper/commit/3e20cd1dbd1e5ac6b08ed90c720bf2890a6a4ffd)
+ - [3b6a2a6](https://github.com/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper/commit/3b6a2a6164225fb9d5cb1bd77b0ccebd9bd8bffd)
+
+
+## Developer contact
 
 ![Discord](https://discord.com/assets/07dca80a102d4149e9736d4b162cff6f.ico)[**Discord**](https://discord.gg/mB989eP)
 
