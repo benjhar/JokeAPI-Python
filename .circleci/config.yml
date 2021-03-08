@@ -6,7 +6,7 @@ jobs:
   # Building and testing the project
   # Useful when a PR is open, for example
   build-and-test:
-    # Our environment, Python 3.6.8
+    # Our environment, Python 3.8
     docker:
       - image: circleci/python:3.8
 
@@ -49,7 +49,7 @@ jobs:
 
     # Same environment
     docker:
-        - image: circleci/python:3.6.8
+        - image: circleci/python:3.8
     steps:
 
       # Gets the code
