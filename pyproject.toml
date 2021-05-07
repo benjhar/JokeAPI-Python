@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "jokeapi"
-version = "0.2.10"
+version = "0.2.11"
 description = "An API wrapper for Sv443's JokeAPI"
 authors = ["leet hakker <leet_haker@cyber-wizard.com>"]
-maintainers = ["leet hakker <leet_haker@cyber-wizard.com>", "kdiri", "ThatCopy"]
+maintainers = ["leet hakker <leet_haker@cyber-wizard.com>"]
 readme = "README.md"
 homepage = "https://github.com/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper"
 
