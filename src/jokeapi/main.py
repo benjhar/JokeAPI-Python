@@ -25,7 +25,7 @@ class Jokes:
     def __init__(self):
         self.http = urllib3.PoolManager()
         self.info = self.http.request("GET", "https://sv443.net/jokeapi/v2/info")
-        self.info = data = json.loads(self.info.data.decode("utf-8"))["jokes"]
+        self.info = json.loads(self.info.data.decode("utf-8"))["jokes"]
 
     def build_request(
         self,
@@ -134,7 +134,7 @@ class Jokes:
 
         r += f"&lang={lang}"
 
-        r += f"{'&safe-mode'}*safe_mode"
+        r += f"{'&safe-mode'*safe_mode}"
 
         return r
 
@@ -216,7 +216,7 @@ class Jokes:
         id_range=[],
         amount=1,
         safe_mode=False,
-        lang=None,
+        lang="en",
         auth_token=None,
         user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) \
         Gecko/20100101 Firefox/77.0",
