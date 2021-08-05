@@ -1,18 +1,18 @@
 [tool.poetry]
 name = "jokeapi"
 version = "1.0.0"
-description = ""
+description = "Python API Wrapper for Sv443's JokeAPI (https://v2.jokeapi.dev)"
 authors = ["thenamesweretakenalready <43702423+thenamesweretakenalready@users.noreply.github.com>"]
 license = "GPL v3.0"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-anyio = "^3.1.0"
+urllib3 = "^1.26.2"
 aiohttp = "^3.7.4"
 simplejson = "^3.17.2"
 black = "^21.6b0"
 pytest = "^6.2.4"
-pytest-asyncio = "^5.4.0"
+pytest-asyncio = "^0.15.1"
 
 [tool.poetry.dev-dependencies]
 

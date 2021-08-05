@@ -1,7 +1,7 @@
+import urllib
 import aiohttp
 import simplejson as json
 import re
-import pprint
 
 
 class CategoryError(Exception):
@@ -37,6 +37,21 @@ async def post(session, url, data, headers=None):
         return response_text, response.headers
 
 
+# https://stackoverflow.com/a/36724229
+class AsyncIterator:
+    def __init__(self, seq):
+        self.iter = iter(seq)
+
+    def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        try:
+            return next(self.iter)
+        except StopIteration:
+            raise StopAsyncIteration
+
+
 class Joke_Class:
     async def init(self):
         async with aiohttp.ClientSession() as session:
@@ -56,10 +71,10 @@ class Joke_Class:
         safe_mode=False,
         lang="en",
     ):
-        r = "https://v2.jokapi.dev/joke/"
+        r = "https://v2.jokeapi.dev/joke/"
 
         if len(category):
-            async for c in category:
+            async for c in AsyncIterator(category):
                 if not c.title() in self.info["categories"]:
                     raise CategoryError(
                         f'''Invalid category selected.
@@ -185,9 +200,10 @@ class Joke_Class:
                     print(r)
                     raise
             else:
+                data = r
                 if (
                     len(
-                        " ".join(re.split("error", r.lower())[0:][1:])
+                        " ".join(re.split("error", data.lower())[0:][1:])
                         .replace("<", "")
                         .replace("/", "")
                         .replace(" ", "")
@@ -305,12 +321,9 @@ class Joke_Class:
             request["lang"] = lang
 
             data = json.dumps(request).replace("'", '"')
-            print(data)
             data = data.encode("ascii")
             url = f"https://v2.jokeapi.dev/submit{'?dry-run'*dry_run}"
 
-
-            pprint.pprint(data)
             if auth_token:
                 headers = {
                     "Authorization": str(auth_token),
