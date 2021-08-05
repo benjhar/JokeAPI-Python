@@ -1,124 +1,159 @@
 from os import getenv
 from dotenv import load_dotenv
 import sys, os
+import asyncio
+import pytest
+import pytest_asyncio.plugin
+import traceback
 
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, "src"))
 from jokeapi import Jokes
 
 load_dotenv()
 
-j = Jokes()
-errors = []
-token = getenv("token")
+pytestmark = pytest.mark.asyncio
 
 
-def test_main():
-    try:
-        j.get_joke()
-    except Exception as e:
-        errors.append({"Error in": "blank joke get", "Error": e})
-
-    """Testing auth tokens"""
-    try:
-        j.get_joke(auth_token=token)
-    except Exception as e:
-        auth_token = None
-        errors.append({"Error in": "auth usage", "Error": e})
-
-    """Testing for errors in categories"""
-    try:
-        j.get_joke(category=["programming"], auth_token=token)
-    except Exception as e:
-        errors.append({"Error in": "category programming", "Error": e})
-    try:
-        j.get_joke(category=["misc"], auth_token=token)
-    except Exception as e:
-        errors.append({"Error in": "category miscellaneous", "Error": e})
-    try:
-        j.get_joke(category=["dark"], auth_token=token)
-    except Exception as e:
-        errors.append({"Error in": "category dark", "Error": e})
-
-    """Testing for errors in blacklist"""
-    try:
-        j.get_joke(blacklist=["nsfw"], auth_token=token)
-    except Exception as e:
-        errors.append({"Error in": "blacklist nsfw", "Error": e})
-
-    try:
-        j.get_joke(blacklist=["religious"], auth_token=token)
-    except Exception as e:
-        errors.append({"Error in": "blacklist religious", "Error": e})
-
-    try:
-        j.get_joke(blacklist=["political"], auth_token=token)
-    except Exception as e:
-        errors.append({"Error in": "blacklist political", "Error": e})
-
-    try:
-        j.get_joke(blacklist=["racist"], auth_token=token)
-    except Exception as e:
-        errors.append({"Error in": "blacklist political", "Error": e})
-
-    try:
-        j.get_joke(blacklist=["sexist"], auth_token=token)
-    except Exception as e:
-        errors.append({"Error in": "blacklist sexist", "Error": e})
-
-    """Testing for errors in response_format"""
-    try:
-        j.get_joke(response_format="xml", auth_token=token)
-    except Exception as e:
-        errors.append({"Error in": "response_format xml", "Error": e})
-
-    try:
-        j.get_joke(response_format="yaml", auth_token=token)
-    except Exception as e:
-        errors.append({"Error in": "response_format yaml", "Error": e})
-
-    """Testing for errors in type"""
-    try:
-        j.get_joke(joke_type="single", auth_token=token)
-    except Exception as e:
-        errors.append({"Error in": "type single", "Error": e})
-
-    try:
-        j.get_joke(joke_type="twopart", auth_token=token)
-    except Exception as e:
-        errors.append({"Error in": "type double", "Error": e})
-
-    """Testing for errors in search_string"""
-    try:
-        j.get_joke(search_string="search", auth_token=token)
-        # as long as this gets a response, the api wrapper is fine;
-        # it probably doesn't exist in a joke.
-    except Exception as e:
-        errors.append({"Error in": "search_string", "Error": e})
-
-    """Testing for errors in id_range"""
-    try:
-        j.get_joke(id_range=[30, 151], auth_token=token)
-    except Exception as e:
-        errors.append({"Error in": "id_range", "Error": e})
-
-    """Testing for errors in safe_mode"""
-    try:
-        j.get_joke(safe_mode=True, auth_token=token)
-    except Exception as e:
-        errors.append({"Error in": "safe_mode", "Error": e})
+async def test_blank():
+    j = await Jokes()
+    await j.get_joke(
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36"
+    )
 
 
-    """    Testing jokeapi.submit_joke()    """
-    try:
-        j.submit_joke("Programming", ["foo", "bar"], {}, dry_run=True)
-    except Exception as e:
-        errors.append({"Error in": "dry_run", "Error": e})
+async def test_auth_tokens():
+    j = await Jokes()
+    token = getenv("token")
+    await j.get_joke(
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
 
 
-    if len(errors):
-        for e in errors:
-            print(f"Error in:  {e['Error in']}\nError: {e['Error']}")
-        if len(errors) == 1:
-            raise Exception("1 error occured")
+async def test_categories():
+    j = await Jokes()
+    token = getenv("token")
+    await j.get_joke(
+        category=["programming"],
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
+    await j.get_joke(
+        category=["misc"],
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
+    await j.get_joke(
+        category=["dark"],
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
 
-        raise Exception(f"{len(errors)} errors occurred")
+
+async def test_blacklist():
+    j = await Jokes()
+    token = getenv("token")
+    await j.get_joke(
+        blacklist=["nsfw"],
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
+
+    await j.get_joke(
+        blacklist=["religious"],
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
+    await j.get_joke(
+        blacklist=["political"],
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
+    await j.get_joke(
+        blacklist=["racist"],
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
+    await j.get_joke(
+        blacklist=["sexist"],
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
+
+
+async def test_repsonse_format():
+    j = await Jokes()
+    token = getenv("token")
+    await j.get_joke(
+        response_format="xml",
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
+
+    await j.get_joke(
+        response_format="yaml",
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
+
+
+async def test_joke_type():
+    j = await Jokes()
+    token = getenv("token")
+    await j.get_joke(
+        joke_type="single",
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
+    await j.get_joke(
+        joke_type="twopart",
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
+
+
+async def test_search_string():
+    j = await Jokes()
+    token = getenv("token")
+    await j.get_joke(
+        search_string="search",
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
+    # as long as this gets a response, the api wrapper is fine;
+    # it probably doesn't exist in a joke.
+
+
+async def test_id_range():
+    j = await Jokes()
+    token = getenv("token")
+    await j.get_joke(
+        id_range=[30, 151],
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
+
+
+async def test_safe_mode():
+    j = await Jokes()
+    token = getenv("token")
+
+    await j.get_joke(
+        safe_mode=True,
+        auth_token=token,
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36",
+    )
+
+
+async def test_user_agent():
+    j = await Jokes()
+    token = getenv("token")
+    await j.get_joke(
+        user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36"
+    )
+
+
+async def test_submit_joke():
+    j = await Jokes()
+    token = getenv("token")
+    await j.submit_joke("Programming", ["foo", "bar"], {}, dry_run=True)
