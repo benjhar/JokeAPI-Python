@@ -230,9 +230,16 @@ class Joke_Class:
                 returns.append(headers)
 
             if auth_token:
-                returns.append(
-                    {"Token-Valid": bool(int(re.split(r"Token-Valid", headers)[1][4]))}
-                )
+                print(len(headers.split("token-valid")))
+                print(len(headers.split("Token-Valid")))
+                if "token-valid" in headers:
+                    returns.append(
+                        {"Token-Valid": bool(int(headers.split("token-valid")[1][4]))}
+                    )
+                elif "Token-Valid" in headers:
+                    returns.append(
+                        {"Token-Valid": bool(int(headers.split("Token-Valid")[1][4]))}
+                    )
 
             if len(returns) > 1:
                 return returns
