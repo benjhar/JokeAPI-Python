@@ -42,7 +42,7 @@ async def test_main():
         await j.get_joke(category=["misc"], auth_token=token, user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36")
     except Exception as e:
         _, __, exc_traceback = sys.exc_info()
-        errors.append({"Error in": "category miscellaneous", "Error": traceback.extract_tb()})
+        errors.append({"Error in": "category miscellaneous", "Error": traceback.extract_tb(exc_traceback)})
     try:
         await j.get_joke(category=["dark"], auth_token=token, user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36")
     except Exception as e:
