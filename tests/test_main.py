@@ -111,6 +111,12 @@ async def test_main():
     except Exception as e:
         errors.append({"Error in": "safe_mode", "Error": e})
 
+    """Testing for errors in user agent"""
+    try:
+        await j.get_joke(user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Brave Chrome/91.0.4472.164 Safari/537.36")
+    except Exception as e:
+        errors.append({"Error in": "user agent", "Error": e})
+
 
     """    Testing jokeapi.submit_joke()    """
     try:
