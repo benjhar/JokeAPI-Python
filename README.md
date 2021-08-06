@@ -4,7 +4,7 @@
 [![Downloads](https://pepy.tech/badge/jokeapi)](https://pepy.tech/project/jokeapi)
 [![Downloads](https://pepy.tech/badge/jokeapi/month)](https://pepy.tech/project/jokeapi/month)
 [![Downloads](https://pepy.tech/badge/jokeapi/week)](https://pepy.tech/project/jokeapi/week)
-[![CircleCI](https://circleci.com/gh/leet-hakkker/JokeAPI-Python.svg?style=svg)](https://circleci.com/gh/leet-hakker/JokeAPI-Python)
+[![CircleCI](https://circleci.com/gh/leet-hakker/JokeAPI-Python.svg?style=svg)](https://circleci.com/gh/leet-hakker/JokeAPI-Python)
 
 
 </div>
