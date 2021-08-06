@@ -1,9 +1,13 @@
 [tool.poetry]
 name = "jokeapi"
-version = "1.0.1"
+version = "1.0.2"
 description = "Python API Wrapper for Sv443's JokeAPI (https://v2.jokeapi.dev)"
-authors = ["thenamesweretakenalready <43702423+thenamesweretakenalready@users.noreply.github.com>"]
-license = "GPL v3.0"
+readme = "README.md"
+homepage = "https://pypi.org/project/jokeapi"
+repository = "https://github.com/leet-hakker/JokeAPI-Python"
+authors = ["leet-hakker <thenamesweretakenalready@gmail.com>"]
+maintainers = ["leet-hakker"]
+license = "GPL-3.0-only"
 
 [tool.poetry.dependencies]
 python = "^3.9"
