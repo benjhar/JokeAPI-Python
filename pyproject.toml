@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jokeapi"
-version = "1.0.0"
+version = "1.0.1"
 description = "Python API Wrapper for Sv443's JokeAPI (https://v2.jokeapi.dev)"
 authors = ["thenamesweretakenalready <43702423+thenamesweretakenalready@users.noreply.github.com>"]
 license = "GPL v3.0"
