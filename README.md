@@ -42,15 +42,19 @@ Note that joke submissions are manually checked and you will be ratelimited.
 ### Example
 
 ```python
-  from jokeapi import Jokes # Import the Jokes class
+from jokeapi import Jokes # Import the Jokes class
+import asyncio
 
-  j = Jokes()  # Initialise the class
-  joke = j.get_joke()[0]  # Retrieve a random joke
-  if joke["type"] == "single": # Print the joke
-    print(joke["joke"])
-  else:
-    print(joke["setup"])
-    print(joke["delivery"])
+async def print_joke():
+    j = await Jokes()  # Initialise the class
+    await j.get_joke()  # Retrieve a random joke
+    if joke["type"] == "single": # Print the joke
+        print(joke["joke"])
+    else:
+        print(joke["setup"])
+        print(joke["delivery"])
+
+asyncio.run(print_joke())
 ```
 
 ### Parameters
@@ -71,7 +75,7 @@ If left blank it will default to use `Any`.
 ##### Example
 
 ```python
-  joke = j.get_joke(category=['programming', 'dark'])  # Will return a joke that fits in either the programming or dark category.
+  joke = await j.get_joke(category=['programming', 'dark'])  # Will return a joke that fits in either the programming or dark category.
 ```
 
 ---
@@ -91,7 +95,7 @@ If left blank it will default to `None`.
 ##### Example
 
 ```python
-  joke = j.get_joke(blacklist=['nsfw', 'racist'])  # Will return a joke that does not have either the flag "nsfw" or "racist".
+  joke = await j.get_joke(blacklist=['nsfw', 'racist'])  # Will return a joke that does not have either the flag "nsfw" or "racist".
 ```
 
 ---
@@ -110,7 +114,7 @@ If left blank it will default to `json`.
 ##### Example
 
 ```python
-  joke = j.get_joke(response_format="xml")  # Will return a joke in xml format.
+  joke = await j.get_joke(response_format="xml")  # Will return a joke in xml format.
 ```
 
 ---
@@ -128,7 +132,7 @@ If left blank it will default to `Any`
 ##### Example
 
 ```python
-  joke = j.get_joke(joke_type="twopart")  # Will return a twopart joke; both a setup and a delivery.
+  joke = await j.get_joke(joke_type="twopart")  # Will return a twopart joke; both a setup and a delivery.
 ```
 
 ---
@@ -142,7 +146,7 @@ If left blank it will default to `None`
 ##### Example
 
 ```python
-  joke = j.get_joke(search_string="the")  # Will return a joke with the word "the" in it.
+  joke = await j.get_joke(search_string="the")  # Will return a joke with the word "the" in it.
   # If there are no jokes then it will return the error from the API.
 ```
 
@@ -160,7 +164,7 @@ If left blank it will default to the maximum range.
 ##### Example
 
 ```python
-  joke = j.get_joke(id_range=[10,100])  # Will return a joke with the ID between 10 and 100.
+  joke = await j.get_joke(id_range=[10,100])  # Will return a joke with the ID between 10 and 100.
 ```
 
 ---
@@ -174,7 +178,7 @@ api defaults to 1 if you use a number larger than the maximum. Defaults to 1.
 ##### Example
 
 ```python
-  joke = j.get_joke(amount=2) # Will return 2 jokes.
+  joke = await j.get_joke(amount=2) # Will return 2 jokes.
 ```
 
 ---
@@ -187,7 +191,7 @@ documentation. Defaults to en.
 ##### Example
 
 ```python
-  joke = j.get_joke(lang="de")
+  joke = await j.get_joke(lang="de")
 ```
 
 ---
@@ -201,7 +205,7 @@ more requests than normal users. Defaults to None
 ##### Example
 
 ```python
-  joke = j.get_joke(auth_token="aaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbb") # Will send the token to the api in a header.
+  joke = await j.get_joke(auth_token="aaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbb") # Will send the token to the api in a header.
 ```
 
 ---
@@ -216,7 +220,7 @@ to change it
 ##### Example
 
 ```python
-  joke = j.get_joke(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0")
+  joke = await j.get_joke(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0")
   # This is in fact the default user agent, and tells the API that we are visitng the page from a Firefox 77.0
   # browser using Windows 10 64bit.
 ```
@@ -233,7 +237,7 @@ Defaults to False.
 ##### Example
 
 ```python
-  response = j.get_joke(return_headers=True)
+  response = await j.get_joke(return_headers=True)
   joke = response[0]
   headers = response[1]
 
@@ -340,16 +344,20 @@ If not, feel free to ask me through one of the channels provided below.
 
 ```python
 from jokeapi import Jokes
+import asyncio
 
-j = Jokes()
+async def submit_new_joke():
+	j = await Jokes()
 
-j.submit_joke("Miscellaneous", "funny haha", {
-    "nsfw": False,
-    "religious": False,
-    "political": False,
-    "racist": False,
-    "sexist": False
-}, lang="de")
+	await j.submit_joke("Miscellaneous", "funny haha", {
+	    "nsfw": False,
+	    "religious": False,
+	    "political": False,
+	    "racist": False,
+	    "sexist": False
+	}, lang="de")
+
+asyncio.run(submit_new_joke())
 ```
 
 ---
@@ -417,8 +425,6 @@ Defaults to `en`
 
 ![Discord](https://discord.com/assets/07dca80a102d4149e9736d4b162cff6f.ico)[**Discord**](https://discord.gg/mB989eP)
 
-[Issue Tracker](https://github.com/thenamesweretakenalready/Sv443s-JokeAPI-Python-Wrapper/issues)
+[Issue Tracker](https://github.com/thenamesweretakenalready/JokeAPI-Python/issues)
 
 [e-mail](mailto:leet_haker@cyber-wizard.com)
-
-[Twitter](https://twitter.com/HakkerLeet)
