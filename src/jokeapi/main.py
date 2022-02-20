@@ -157,7 +157,7 @@ class Joke_Class:
         if search_string:
             r += f"&contains={search_string}"
         if id_range:
-            r += f"i&dRange={id_range[0]}-{id_range[1]}"
+            r += f"&idRange={id_range[0]}-{id_range[1]}"
         if amount > 10:
             raise ValueError(
                 f"amount parameter must be no greater than 10. you passed {amount}."
