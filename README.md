@@ -47,7 +47,7 @@ import asyncio
 
 async def print_joke():
     j = await Jokes()  # Initialise the class
-    await j.get_joke()  # Retrieve a random joke
+    joke = await j.get_joke()  # Retrieve a random joke
     if joke["type"] == "single": # Print the joke
         print(joke["joke"])
     else:
