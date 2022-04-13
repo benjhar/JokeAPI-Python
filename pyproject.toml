@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jokeapi"
-version = "1.0.3"
+version = "1.0.4"
 description = "Python API Wrapper for Sv443's JokeAPI (https://v2.jokeapi.dev)"
 readme = "README.md"
 homepage = "https://pypi.org/project/jokeapi"
@@ -10,7 +10,7 @@ maintainers = ["leet-hakker"]
 license = "GPL-3.0-only"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.7"
 urllib3 = "^1.26.2"
 aiohttp = "^3.7.4"
 simplejson = "^3.17.2"
