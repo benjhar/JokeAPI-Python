@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jokeapi"
-version = "1.0.4"
+version = "1.0.5"
 description = "Python API Wrapper for Sv443's JokeAPI (https://v2.jokeapi.dev)"
 readme = "README.md"
 homepage = "https://pypi.org/project/jokeapi"
